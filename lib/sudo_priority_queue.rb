@@ -2,8 +2,8 @@ require 'set'
 require_relative "item.rb"
 
 class SudoPriorityQueue
-  atte_reader :q
-  def initialize(items:)
+  attr_reader :q
+  def initialize(items: nil)
     @q = Set.new(items)
   end
 
@@ -18,29 +18,30 @@ class SudoPriorityQueue
 
 # pull_highest
   def pull_highest
-    qs = q.max
-    q.delete qs
-    qs
+    highest = q.max
+    q.delete highest
+    highest
   end
 
 # pull_lowest
-  def q_shortest
-    qs = q.min
-    q.delete qs
-    qs
+  def pull_lowest
+    lowest = q.min
+    q.delete lowest
+    lowest
   end
 
 # find_by_priority
-  def find_lowest
-    qs = q.min
+  def find_highest
+    highest = q.max
   end
 
-  def find_highest
-    qs = q.max
+  def find_lowest
+    lowest = q.min
   end
 
   def find_by_priority(value)
     q.find {|member| member.priority == value}
+  end
 
 # find_by_label
   def find_by_label(value)
