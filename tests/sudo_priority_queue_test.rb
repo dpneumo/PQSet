@@ -109,6 +109,22 @@ class SudoPriorityQueueTest < Minitest::Test
     assert @pq.q.empty?
   end
 
+  def test_retrieval_order_of_items_with_same_priority_is_FIFO_on_item_insertion_order
+    items = ('a'..'c').to_a.map {|ch| Item.new(label: ch, priority: ch.ord-97) }
+    pq = SudoPriorityQueue.new(items: items)
+    items.last.priority = 1
+    items.first.priority = 1
+    assert_equal 'a', pq.find_highest.label
+    assert_equal 'a', pq.find_lowest.label
+    # Now insert in reverse order and re-test
+    items = ('a'..'c').to_a.map {|ch| Item.new(label: ch, priority: ch.ord-97) }.reverse
+    pq = SudoPriorityQueue.new(items: items)
+    items.last.priority = 1
+    items.first.priority = 1
+    assert_equal 'c', pq.find_highest.label
+    assert_equal 'c', pq.find_lowest.label
+  end
+
   def test_changing_item_priorities_is_honored
     items = ('a'..'z').to_a.map {|ch| Item.new(label: ch, priority: ch.ord) }
     pq = SudoPriorityQueue.new(items: items)
