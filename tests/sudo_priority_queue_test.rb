@@ -108,4 +108,20 @@ class SudoPriorityQueueTest < Minitest::Test
     assert @pq.empty?
     assert @pq.q.empty?
   end
+
+  def test_changing_item_priorities_is_honored
+    items = ('a'..'z').to_a.map {|ch| Item.new(label: ch, priority: ch.ord) }
+    pq = SudoPriorityQueue.new(items: items)
+    shuffled_priorities = (97..122).to_a.shuffle
+    shuffle_item_priorities(items, shuffled_priorities)
+      .map {|itm, _| itm }
+      .sort
+      .map {|itm| itm.label }
+      .each {|label| assert_equal label, pq.pull_lowest.label }
+  end
+
+  def shuffle_item_priorities(items, shuffled_priorities)
+    shuffled = items.zip(shuffled_priorities)
+    shuffled.each {|item, new_priority| item.priority = new_priority }
+  end
 end
