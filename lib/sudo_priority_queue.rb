@@ -32,11 +32,11 @@ class SudoPriorityQueue
 
 # find_by_priority
   def find_highest
-    highest = q.max
+    q.max
   end
 
   def find_lowest
-    lowest = q.min
+    q.min
   end
 
   def find_by_priority(value)
