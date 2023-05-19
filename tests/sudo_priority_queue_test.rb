@@ -5,15 +5,13 @@ require_relative '../lib/sudo_priority_queue'
 
 class SudoPriorityQueueTest < Minitest::Test
   def setup
-    items = [
-      Item.new(label: 'b', priority: 2),
-      Item.new(label: 'x', priority: 6),
-      Item.new(label: 'y', priority: 6),
-      Item.new(label: 'z', priority: 3),
-      Item.new(label: 'w', priority: 3),
-      Item.new(label: 'r', priority: 10)
-    ]
-    @pq = SudoPriorityQueue.new(items: items)
+    @pq = SudoPriorityQueue.new
+    @pq.insert(Item.new(label: 'b', priority: 2))
+    @pq.insert(Item.new(label: 'x', priority: 6))
+    @pq.insert(Item.new(label: 'y', priority: 6))
+    @pq.insert(Item.new(label: 'z', priority: 3))
+    @pq.insert(Item.new(label: 'w', priority: 3))
+    @pq.insert(Item.new(label: 'r', priority: 10))
   end
 
   def test_inits_q_to_empty_if_items_not_provided
@@ -110,15 +108,20 @@ class SudoPriorityQueueTest < Minitest::Test
   end
 
   def test_retrieval_order_of_items_with_same_priority_is_FIFO_on_item_insertion_order
-    items = ('a'..'c').to_a.map {|ch| Item.new(label: ch, priority: ch.ord-97) }
-    pq = SudoPriorityQueue.new(items: items)
+    pq = SudoPriorityQueue.new
+    items = ('a'..'c').to_a
+      .map {|ch| Item.new(label: ch, priority: ch.ord-97) }
+      .each {|item| pq.insert(item) }
     items.last.priority = 1
     items.first.priority = 1
     assert_equal 'a', pq.find_highest.label
     assert_equal 'a', pq.find_lowest.label
     # Now insert in reverse order and re-test
-    items = ('a'..'c').to_a.map {|ch| Item.new(label: ch, priority: ch.ord-97) }.reverse
-    pq = SudoPriorityQueue.new(items: items)
+    pq = SudoPriorityQueue.new
+    items = ('a'..'c').to_a
+      .map {|ch| Item.new(label: ch, priority: ch.ord-97) }
+      .reverse
+      .each {|item| pq.insert(item) }
     items.last.priority = 1
     items.first.priority = 1
     assert_equal 'c', pq.find_highest.label
@@ -126,8 +129,10 @@ class SudoPriorityQueueTest < Minitest::Test
   end
 
   def test_changing_item_priorities_is_honored
-    items = ('a'..'z').to_a.map {|ch| Item.new(label: ch, priority: ch.ord) }
-    pq = SudoPriorityQueue.new(items: items)
+    pq = SudoPriorityQueue.new
+    items = ('a'..'z').to_a
+      .map {|ch| Item.new(label: ch, priority: ch.ord) }
+      .each {|item| pq.insert(item) }
     shuffled_priorities = (97..122).to_a.shuffle
     shuffle_item_priorities(items, shuffled_priorities)
       .map {|itm, _| itm }

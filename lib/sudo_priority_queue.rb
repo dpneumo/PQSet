@@ -1,64 +1,63 @@
 require 'set'
 require_relative "item.rb"
 
+# Uses Ruby's Set class + items that
+# are comparable by priority to
+# implement a priority_queue
+# Set enforces uniqueness of items.
+
 class SudoPriorityQueue
   attr_reader :q
-  def initialize(items: nil)
-    @q = Set.new(items)
+  def initialize
+    @q = Set.new
   end
 
-# insert
   def insert(item)
-    q.add(item)
+    @q.add(item)
   end
+  alias_method :<<, :insert
 
-  def bulk_insert(items)
-    q.merge(items)
-  end
-
-# pull_highest
   def pull_highest
-    highest = q.max
-    q.delete highest
+    highest = @q.max
+    @q.delete highest
     highest
   end
 
-# pull_lowest
   def pull_lowest
-    lowest = q.min
-    q.delete lowest
+    lowest = @q.min
+    @q.delete lowest
     lowest
   end
 
-# find_by_priority
   def find_highest
-    q.max
+    @q.max
   end
 
   def find_lowest
-    q.min
+    @q.min
   end
 
-  def find_by_priority(value)
-    q.find {|member| member.priority == value}
-  end
-
-# find_by_label
-  def find_by_label(value)
-    q.find {|member| member.label == value }
-  end
-
-# empty?
   def empty?
-    q.empty?
+    @q.empty?
   end
 
-# clear
   def clear
-    q.clear
+    @q.clear
   end
 
-# update
+# Extensions
+  def find_by_priority(value)
+    @q.find {|member| member.priority == value}
+  end
+
+  def find_by_label(value)
+    @q.find {|member| member.label == value }
+  end
+
+  def bulk_insert(items)
+    @q.merge(items)
+  end
+
   def update_member(member, attribute, value)
     member.send(attribute, value)
   end
