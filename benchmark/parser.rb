@@ -16,7 +16,6 @@ class Parser
         when 'user' then marking = true
         when 'find'   then data[size][$1] << $2.to_f if marking
         when 'pull'   then data[size][$1] << $2.to_f if marking; marking = false
-        when 'insert' then data[size][$1] << $2.to_f if marking; marking = false
         end
       end
     end
@@ -33,31 +32,6 @@ class Parser
       method_hash.each do |method, times|
         mean = times.sum(0.0)/times.size
         pd[size][method] = mean.round(6)
-      end
-    end
-    pd
-  end
-
-  def recips
-    pd = Hash.new do |h,size|
-      h[size] = Hash.new do |h1,method|
-        h1[method] = nil
-      end
-    end
-    means.each do |size, method_hash|
-      method_hash.each do |method, mean|
-        recip = size/mean
-        pd[size][method] = recip.round(0)
-      end
-    end
-    pd
-  end
-
-  def rate_plotdata
-    pd = { 'find' => [], 'pull' => [], 'insert' => [] }
-    recips.each do |size, mthd_data|
-      mthd_data.each do |method, rate|
-        pd[method] << [size.to_s, rate.to_s]
       end
     end
     pd
