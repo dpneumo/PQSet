@@ -6,7 +6,7 @@ require_relative "item.rb"
 # implement a priority_queue
 # Set enforces uniqueness of items.
 
-class SudoPriorityQueue
+class PriorityQueueSet
   attr_reader :q
   def initialize
     @q = Set.new

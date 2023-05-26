@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require_relative 'test_helper'
-require_relative '../lib/sudo_priority_queue'
+require_relative '../lib/priority_queue_set'
 
-class SudoPriorityQueueTest < Minitest::Test
+class PriorityQueueSetTest < Minitest::Test
   def setup
-    @pq = SudoPriorityQueue.new
+    @pq = PriorityQueueSet.new
     @pq.insert(Item.new(label: 'b', priority: 2))
     @pq.insert(Item.new(label: 'x', priority: 6))
     @pq.insert(Item.new(label: 'y', priority: 6))
@@ -15,11 +15,11 @@ class SudoPriorityQueueTest < Minitest::Test
   end
 
   def test_inits_q_to_empty_if_items_not_provided
-    assert_empty SudoPriorityQueue.new.q
+    assert_empty PriorityQueueSet.new.q
   end
 
   def test_empty_returns_true_at_startup_if_items_not_provided
-    assert SudoPriorityQueue.new.empty?
+    assert PriorityQueueSet.new.empty?
   end
 
   def test_empty_returns_false_when_the_queue_contains_items
@@ -59,7 +59,7 @@ class SudoPriorityQueueTest < Minitest::Test
   end
 
   def test_find_highest_returns_nil_for_empty_queue
-    assert_nil SudoPriorityQueue.new.find_highest
+    assert_nil PriorityQueueSet.new.find_highest
   end
 
   def test_find_highest_returns_the_first_inserted_highest_priority_item
@@ -69,7 +69,7 @@ class SudoPriorityQueueTest < Minitest::Test
   end
 
   def test_find_lowest_returns_nil_for_empty_queue
-    assert_nil SudoPriorityQueue.new.find_lowest
+    assert_nil PriorityQueueSet.new.find_lowest
   end
 
   def test_find_lowest_returns_the_first_inserted_lowest_priority_item
@@ -108,7 +108,7 @@ class SudoPriorityQueueTest < Minitest::Test
   end
 
   def test_retrieval_order_of_items_with_same_priority_is_FIFO_on_item_insertion_order
-    pq = SudoPriorityQueue.new
+    pq = PriorityQueueSet.new
     items = ('a'..'c').to_a
       .map {|ch| Item.new(label: ch, priority: ch.ord-97) }
       .each {|item| pq.insert(item) }
@@ -117,7 +117,7 @@ class SudoPriorityQueueTest < Minitest::Test
     assert_equal 'a', pq.find_highest.label
     assert_equal 'a', pq.find_lowest.label
     # Now insert in reverse order and re-test
-    pq = SudoPriorityQueue.new
+    pq = PriorityQueueSet.new
     items = ('a'..'c').to_a
       .map {|ch| Item.new(label: ch, priority: ch.ord-97) }
       .reverse
@@ -129,7 +129,7 @@ class SudoPriorityQueueTest < Minitest::Test
   end
 
   def test_changing_item_priorities_is_honored
-    pq = SudoPriorityQueue.new
+    pq = PriorityQueueSet.new
     items = ('a'..'z').to_a
       .map {|ch| Item.new(label: ch, priority: ch.ord) }
       .each {|item| pq.insert(item) }

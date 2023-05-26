@@ -1,8 +1,8 @@
-require_relative '../lib/sudo_priority_queue'
+require_relative '../lib/priority_queue_set'
 require_relative '../lib/item'
 
 class InsertBenchmark
-  PQ = SudoPriorityQueue
+  PQ = PriorityQueueSet
   PQsizes = [100, 1000, 10000, 100000, 1000000]
   MaxPriority = 100
   PQInsertSamples = 30
