@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require_relative 'test_helper'
-require_relative '../lib/priority_queue_set'
+require_relative '../lib/pq_set'
+require_relative '../lib/item'
 
-class PriorityQueueSetTest < Minitest::Test
+class PQSetTest < Minitest::Test
   def setup
-    @pq = PriorityQueueSet.new
+    @pq = PQSet.new
     @pq.insert(Item.new(label: 'b', priority: 2))
     @pq.insert(Item.new(label: 'x', priority: 6))
     @pq.insert(Item.new(label: 'y', priority: 6))
@@ -14,16 +15,9 @@ class PriorityQueueSetTest < Minitest::Test
     @pq.insert(Item.new(label: 'r', priority: 10))
   end
 
-  def test_inits_q_to_empty_if_items_not_provided
-    assert_empty PriorityQueueSet.new.q
-  end
-
-  def test_empty_returns_true_at_startup_if_items_not_provided
-    assert PriorityQueueSet.new.empty?
-  end
-
-  def test_empty_returns_false_when_the_queue_contains_items
-    refute @pq.empty?
+  def test_an_alias_for_insert # <<
+    @pq << Item.new(label: 'm', priority: 20)
+    assert_equal 'm', @pq.pull_highest.label
   end
 
   def test_correctly_pulls_highest_items_returning_nil_when_empty
@@ -35,6 +29,42 @@ class PriorityQueueSetTest < Minitest::Test
     assert_equal 'b', @pq.pull_highest.label
     assert_nil    @pq.pull_highest
     assert @pq.empty?
+  end
+
+  def test_find_highest_returns_nil_for_empty_queue
+    assert_nil PQSet.new.find_highest
+  end
+
+  def test_find_highest_returns_the_first_inserted_highest_priority_item
+    assert_equal 'r', @pq.find_highest.label
+    @pq.pull_highest
+    assert_equal 'x', @pq.find_highest.label
+  end
+
+  def test_identifies_empty_queue
+    pq = PQSet.new
+    assert pq.empty?
+    pq.insert(Item.new(label:'T', priority: 5))
+    refute pq.empty?
+    pq.pull_highest
+    assert pq.empty?
+  end
+
+  def test_clear_empties_the_priority_queue
+    @pq.clear
+    assert @pq.empty?
+  end
+
+  def test_returns_correct_queue_size
+    assert_equal 6, @pq.size
+    @pq.pull_highest
+    assert_equal 5, @pq.size
+  end
+
+# Extensions tests
+  def test_returns_string_representation_of_queue
+    expect = [["b", 2], ["x", 6], ["y", 6], ["z", 3], ["w", 3], ["r", 10]]
+    assert_equal expect, @pq.to_s
   end
 
   def test_correctly_pulls_lowest_items_returning_nil_when_empty
@@ -58,18 +88,8 @@ class PriorityQueueSetTest < Minitest::Test
     assert_nil    @pq.pull_highest
   end
 
-  def test_find_highest_returns_nil_for_empty_queue
-    assert_nil PriorityQueueSet.new.find_highest
-  end
-
-  def test_find_highest_returns_the_first_inserted_highest_priority_item
-    assert_equal 'r', @pq.find_highest.label
-    @pq.pull_highest
-    assert_equal 'x', @pq.find_highest.label
-  end
-
   def test_find_lowest_returns_nil_for_empty_queue
-    assert_nil PriorityQueueSet.new.find_lowest
+    assert_nil PQSet.new.find_lowest
   end
 
   def test_find_lowest_returns_the_first_inserted_lowest_priority_item
@@ -94,21 +114,16 @@ class PriorityQueueSetTest < Minitest::Test
     assert_nil @pq.find_by_label('a')
   end
 
-  def test_can_modify_priority_of_an_item_without_effecting_position_in_queue_of_other_items
+# Implementation tests
+  def test_can_modify_an_item_priority_sin_position_delta_in_queue_of_other_items
     @pq.find_by_label('z').priority = 4
     assert_equal 'z', @pq.find_by_priority(4).label
     @pq.pull_lowest
     assert_equal 'w', @pq.find_lowest.label
   end
 
-  def test_clear_empties_the_priority_queue
-    @pq.clear
-    assert @pq.empty?
-    assert @pq.q.empty?
-  end
-
   def test_retrieval_order_of_items_with_same_priority_is_FIFO_on_item_insertion_order
-    pq = PriorityQueueSet.new
+    pq = PQSet.new
     items = ('a'..'c').to_a
       .map {|ch| Item.new(label: ch, priority: ch.ord-97) }
       .each {|item| pq.insert(item) }
@@ -117,7 +132,7 @@ class PriorityQueueSetTest < Minitest::Test
     assert_equal 'a', pq.find_highest.label
     assert_equal 'a', pq.find_lowest.label
     # Now insert in reverse order and re-test
-    pq = PriorityQueueSet.new
+    pq = PQSet.new
     items = ('a'..'c').to_a
       .map {|ch| Item.new(label: ch, priority: ch.ord-97) }
       .reverse
@@ -129,7 +144,7 @@ class PriorityQueueSetTest < Minitest::Test
   end
 
   def test_changing_item_priorities_is_honored
-    pq = PriorityQueueSet.new
+    pq = PQSet.new
     items = ('a'..'z').to_a
       .map {|ch| Item.new(label: ch, priority: ch.ord) }
       .each {|item| pq.insert(item) }

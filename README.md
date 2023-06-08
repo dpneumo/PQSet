@@ -1,4 +1,4 @@
-# PriorityQueueSet
+# PQSet
 
 ## **Ruby Set Is Effectively A Priority Queue**
 
@@ -6,15 +6,15 @@ Ruby does not natively implement a priority queue. However, it is quite easy to 
 
 [Documentation for Ruby Set](https://ruby-doc.org/stdlib-3.1.0/libdoc/set/rdoc/Set.html)
 
-One can use PriorityQueueSet as a priority queue but it is really designed to show how the features of Set and member Items that include Comparable and implement <=> match up to expected features of a priority queue. I generally use Set directly in working code.
+One can use PQSet as a priority queue but it is really designed to show how the features of Set and member Items that include Comparable and implement <=> match up to expected features of a priority queue. I generally use Set directly in working code.
 
-In PriorityQueueSet @q, a Set, provides the functionality of a priority queue, if it holds items that include the Comparable module and implement the 'spaceship' operator, <=>.
+In PQSet @q, a Set, provides the functionality of a priority queue, if it holds items that include the Comparable module and implement the 'spaceship' operator, <=>.
 
 
 
 The 2 classes used:
 
-**PriorityQueueSet**
+**PQSet**
  - Initialize with list of items
     - @q: Set holding items retrievable on a priority attribute of the item
  - Only one instance of an item may be stored in this queue though item attributes may be changed.
@@ -29,7 +29,7 @@ The 2 classes used:
 This exercise was triggered by statements I have frequently seen in Advent of Code that Ruby does not provide a Priority Queue
 
 
-:~/Projects/PriorityQueueSet$ ruby tests/pq_benchmark.rb
+:~/Projects/PQSet$ ruby tests/pq_benchmark.rb
 max_lbl: zzzz
 SampleSize: 100
 Items size: 475254

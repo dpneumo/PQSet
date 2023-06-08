@@ -14,7 +14,6 @@
 benchmark_results.txt
 *.csv
 *.ods
-/memory_profile/
 
 # Used by dotenv library to load environment variables.
 # .env
